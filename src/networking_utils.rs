@@ -103,11 +103,11 @@ impl NetworkingUtils {
     pub fn relay_network_status_callback(
         &self,
         mut callback: impl FnMut(RelayNetworkStatus) + Send + 'static,
-    ) {
+    ) -> crate::CallbackHandle {
         unsafe {
             register_callback(&self.inner, move |status: RelayNetworkStatusCallback| {
                 callback(status.status);
-            });
+            })
         }
     }
 }

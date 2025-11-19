@@ -183,7 +183,7 @@ impl NetworkingMessages {
     pub fn session_request_callback(
         &self,
         mut callback: impl FnMut(SessionRequest) + Send + 'static,
-    ) {
+    ) -> crate::CallbackHandle {
         let builder = SessionRequestBuilder {
             message: self.net,
             inner: Arc::downgrade(&self.inner),
@@ -196,7 +196,7 @@ impl NetworkingMessages {
                         callback(request);
                     }
                 },
-            );
+            )
         }
     }
 
@@ -207,14 +207,14 @@ impl NetworkingMessages {
     pub fn session_failed_callback(
         &self,
         mut callback: impl FnMut(NetConnectionInfo) + Send + 'static,
-    ) {
+    ) -> crate::CallbackHandle {
         unsafe {
             register_callback(
                 &self.inner,
                 move |failed: NetworkingMessagesSessionFailed| {
                     callback(failed.info);
                 },
-            );
+            )
         }
     }
 
