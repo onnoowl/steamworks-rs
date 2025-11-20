@@ -1,3 +1,4 @@
+#![feature(mpmc_channel)]
 #![doc = include_str!("../README.md")]
 
 #[macro_use]
@@ -16,7 +17,7 @@ use core::ffi::c_void;
 use std::collections::HashMap;
 use std::ffi::{c_char, CStr, CString};
 use std::fmt::{self, Debug, Formatter};
-use std::sync::mpsc::Sender;
+use std::sync::mpmc::Sender;
 use std::sync::{Arc, Mutex, Weak};
 
 #[cfg(feature = "serde")]

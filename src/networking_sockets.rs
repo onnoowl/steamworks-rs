@@ -13,7 +13,7 @@ use serial_test::serial;
 use std::convert::TryInto;
 use std::ffi::CString;
 use std::net::SocketAddr;
-use std::sync::mpsc::Receiver;
+use std::sync::mpmc::Receiver;
 use std::sync::Arc;
 use sys::SteamNetworkingMessage_t;
 
@@ -398,7 +398,7 @@ impl ListenSocket {
         sockets: *mut sys::ISteamNetworkingSockets,
         inner: Arc<Inner>,
     ) -> Self {
-        let (sender, receiver) = std::sync::mpsc::channel();
+        let (sender, receiver) = std::sync::mpmc::channel();
         let inner_socket = Arc::new(InnerSocket {
             sockets,
             handle,
@@ -565,7 +565,7 @@ impl NetConnection {
         sockets: *mut sys::ISteamNetworkingSockets,
         inner: Arc<Inner>,
     ) -> Self {
-        let (sender, receiver) = std::sync::mpsc::channel();
+        let (sender, receiver) = std::sync::mpmc::channel();
         inner
             .networking_sockets_data
             .lock()
