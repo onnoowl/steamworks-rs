@@ -1813,6 +1813,14 @@ pub struct NetworkingMessage {
 }
 
 impl NetworkingMessage {
+    pub fn set_lane(&mut self, lane: u16) {
+        unsafe { (*self.message).m_idxLane = lane }
+    }
+
+    pub fn lane(&self) -> u16 {
+        unsafe { (*self.message).m_idxLane }
+    }
+
     /// For messages received on connections: what connection did this come from?
     /// For outgoing messages: what connection to send it to?
     /// Not used when using the ISteamNetworkingMessages interface
