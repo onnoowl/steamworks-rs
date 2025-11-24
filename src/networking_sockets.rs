@@ -864,7 +864,7 @@ impl NetConnection {
     ) -> Result<Vec<NetworkingMessage>, InvalidHandle> {
         if self.message_buffer.capacity() < batch_size {
             self.message_buffer
-                .reserve(batch_size - self.message_buffer.capacity());
+                .reserve(batch_size);
         }
 
         unsafe {
@@ -966,7 +966,7 @@ impl NetPollGroup {
     pub fn receive_messages(&mut self, batch_size: usize) -> Vec<NetworkingMessage> {
         if self.message_buffer.capacity() < batch_size {
             self.message_buffer
-                .reserve(batch_size - self.message_buffer.capacity());
+                .reserve(batch_size);
         }
 
         unsafe {
