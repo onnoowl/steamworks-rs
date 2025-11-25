@@ -231,6 +231,9 @@ impl Matchmaking {
                 user.0,
                 key.as_ptr(),
             );
+            if data.is_null() {
+                return None;
+            }
             CStr::from_ptr(data)
         }
         .to_str()
@@ -1125,7 +1128,7 @@ impl_callback!(cb: LobbyChatUpdate_t => LobbyChatUpdate {
     Self {
         lobby: LobbyId(cb.m_ulSteamIDLobby),
         user_changed: SteamId(cb.m_ulSteamIDUserChanged),
-        making_change: SteamId(cb.m_ulSteamIDUserChanged),
+        making_change: SteamId(cb.m_ulSteamIDMakingChange),
         member_state_change: match cb.m_rgfChatMemberStateChange {
             x if x == sys::EChatMemberStateChange::k_EChatMemberStateChangeEntered as u32 => {
                 ChatMemberStateChange::Entered

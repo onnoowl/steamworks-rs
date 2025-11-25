@@ -963,7 +963,7 @@ unsafe impl Send for NetPollGroup {}
 unsafe impl Sync for NetPollGroup {}
 
 impl NetPollGroup {
-    pub fn receive_messages(&mut self, batch_size: usize) -> Vec<NetworkingMessage> {
+    pub fn receive_messages(&mut self, batch_size: usize) -> Result<Vec<NetworkingMessage>, InvalidHandle> {
         if self.message_buffer.capacity() < batch_size {
             self.message_buffer
                 .reserve(batch_size);
@@ -975,17 +975,20 @@ impl NetPollGroup {
                 self.handle,
                 self.message_buffer.as_mut_ptr(),
                 batch_size as _,
-            ) as usize;
-            self.message_buffer.set_len(count);
+            );
+            if count < 0 {
+                return Err(InvalidHandle);
+            }
+            self.message_buffer.set_len(count as usize);
         }
 
-        self.message_buffer
+        Ok(self.message_buffer
             .drain(..)
             .map(|x| NetworkingMessage {
                 message: x,
                 _inner: self.inner.clone(),
             })
-            .collect()
+            .collect())
     }
 }
 

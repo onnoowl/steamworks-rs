@@ -144,6 +144,7 @@ impl NetworkingMessages {
                 buffer.as_mut_ptr(),
                 batch_size as _,
             );
+            debug_assert!(message_count >= 0);
             buffer.set_len(message_count as usize);
         }
 
